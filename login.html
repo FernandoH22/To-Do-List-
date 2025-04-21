@@ -70,7 +70,7 @@
             }, 3000);
         }
 
-        // Función de Registro COMPLETAMENTE FUNCIONAL
+        
         registerBtn.addEventListener('click', function() {
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
@@ -91,7 +91,7 @@
                 return;
             }
 
-            // Verificar si el usuario ya existe
+           
             if (localStorage.getItem(username)) {
                 showMessage("El usuario ya existe");
                 return;
@@ -112,13 +112,13 @@
             // Guardar en localStorage
             localStorage.setItem(username, JSON.stringify(userData));
             
-            // Mostrar mensaje y limpiar campos
+           
             showMessage("¡Registro exitoso! Ahora puede iniciar sesión", true);
             usernameInput.value = '';
             passwordInput.value = '';
         });
 
-        // Función de Login COMPLETAMENTE FUNCIONAL
+        
         loginBtn.addEventListener('click', function() {
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
@@ -129,8 +129,8 @@
                 return;
             }
 
-            // Usuario demo
-            if (username === "demo" && password === "demo123") {
+            
+            if (username === "EduarLindo" && password === "Eduarlindo22") {
                 if (!localStorage.getItem('demo')) {
                     const demoData = {
                         password: "demo123",
@@ -176,14 +176,12 @@
         });
     
     
-        // Función para validar contraseña con caracteres especiales
         function validarContraseña(contraseña) {
         // Mínimo 8 caracteres, al menos una mayúscula, un número y un carácter especial
         const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
         return regex.test(contraseña);
     }
 
-    // Función de Registro modificada
     registerBtn.addEventListener('click', function() {
         const username = usernameInput.value.trim();
         const password = passwordInput.value.trim();
@@ -199,7 +197,6 @@
             return;
         }
 
-        // Validación de contraseña mejorada
         if (password.length < 8) {
             showMessage("La contraseña debe tener al menos 8 caracteres");
             return;
@@ -210,7 +207,6 @@
             return;
         }
 
-        // Resto del código de registro permanece igual...
         if (localStorage.getItem(username)) {
             showMessage("El usuario ya existe");
             return;
