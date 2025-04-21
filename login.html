@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        #message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inicio de Sesión <i class="fas fa-user"></i></h1>
+        
+        <div id="message"></div>
+        
+        <div class="form-group">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="username" class="input-field" placeholder="Nombre de usuario" required>
+        </div>
+        
+        <div class="form-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" class="input-field" placeholder="Contraseña" required>
+        </div>
+        
+        <div class="btn-container">
+            <button id="registerBtn" type="button" class="btn btn-secondary">
+                <i class="fas fa-user-plus"></i> Registrarse
+            </button>
+            <button id="loginBtn" type="button" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const messageEl = document.getElementById('message');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const registerBtn = document.getElementById('registerBtn');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // Mostrar mensaje
+        function showMessage(text, isSuccess = false) {
+            messageEl.textContent = text;
+            messageEl.className = isSuccess ? 'success' : 'error';
+            messageEl.style.display = 'block';
+            
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // Función de Registro COMPLETAMENTE FUNCIONAL
+        registerBtn.addEventListener('click', function() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            // Validación
+            if (!username || !password) {
+                showMessage("Debe completar todos los campos");
+                return;
+            }
+
+            if (username.length < 3) {
+                showMessage("El usuario debe tener al menos 3 caracteres");
+                return;
+            }
+
+            if (password.length < 4) {
+                showMessage("La contraseña debe tener al menos 4 caracteres");
+                return;
+            }
+
+            // Verificar si el usuario ya existe
+            if (localStorage.getItem(username)) {
+                showMessage("El usuario ya existe");
+                return;
+            }
+
+            // Crear usuario
+            const userData = {
+                password: password,
+                preferences: {
+                    bgColor: "#f5f5f5",
+                    fontSize: "16px",
+                    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                    containerBg: "#ffffff"
+                },
+                tasks: []
+            };
+
+            // Guardar en localStorage
+            localStorage.setItem(username, JSON.stringify(userData));
+            
+            // Mostrar mensaje y limpiar campos
+            showMessage("¡Registro exitoso! Ahora puede iniciar sesión", true);
+            usernameInput.value = '';
+            passwordInput.value = '';
+        });
+
+        // Función de Login COMPLETAMENTE FUNCIONAL
+        loginBtn.addEventListener('click', function() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            // Validación
+            if (!username || !password) {
+                showMessage("Debe completar todos los campos");
+                return;
+            }
+
+            // Usuario demo
+            if (username === "demo" && password === "demo123") {
+                if (!localStorage.getItem('demo')) {
+                    const demoData = {
+                        password: "demo123",
+                        preferences: {
+                            bgColor: "#f5f5f5",
+                            fontSize: "16px",
+                            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                            containerBg: "#ffffff"
+                        },
+                        tasks: []
+                    };
+                    localStorage.setItem('demo', JSON.stringify(demoData));
+                }
+                
+                localStorage.setItem('currentUser', 'demo');
+                localStorage.setItem('loggedIn', 'true');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Verificar usuario normal
+            const userData = JSON.parse(localStorage.getItem(username));
+
+            if (!userData) {
+                showMessage("Usuario no registrado");
+                return;
+            }
+
+            if (userData.password === password) {
+                localStorage.setItem('currentUser', username);
+                localStorage.setItem('loggedIn', 'true');
+                window.location.href = 'index.html';
+            } else {
+                showMessage("Contraseña incorrecta");
+            }
+        });
+
+        // Login con Enter
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loginBtn.click();
+            }
+        });
+    
+    
+        // Función para validar contraseña con caracteres especiales
+        function validarContraseña(contraseña) {
+        // Mínimo 8 caracteres, al menos una mayúscula, un número y un carácter especial
+        const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+        return regex.test(contraseña);
+    }
+
+    // Función de Registro modificada
+    registerBtn.addEventListener('click', function() {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        // Validación básica
+        if (!username || !password) {
+            showMessage("Debe completar todos los campos");
+            return;
+        }
+
+        if (username.length < 3) {
+            showMessage("El usuario debe tener al menos 3 caracteres");
+            return;
+        }
+
+        // Validación de contraseña mejorada
+        if (password.length < 8) {
+            showMessage("La contraseña debe tener al menos 8 caracteres");
+            return;
+        }
+
+        if (!validarContraseña(password)) {
+            showMessage("La contraseña debe contener al menos: Una mayúscula, Un número, Un carácter especial");
+            return;
+        }
+
+        // Resto del código de registro permanece igual...
+        if (localStorage.getItem(username)) {
+            showMessage("El usuario ya existe");
+            return;
+        }
+
+        // Crear usuario
+        const userData = {
+            password: password,
+            preferences: {
+                bgColor: "#f5f5f5",
+                fontSize: "16px",
+                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                containerBg: "#ffffff"
+            },
+            tasks: []
+        };
+
+        // Guardar en localStorage
+        localStorage.setItem(username, JSON.stringify(userData));
+        
+        showMessage("¡Registro exitoso! Ahora puede iniciar sesión", true);
+        usernameInput.value = '';
+        passwordInput.value = '';
+    });
+
+    </script>
+</body>
+</html>
