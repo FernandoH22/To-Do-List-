@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificación CORREGIDA
+    
     if (localStorage.getItem('loggedIn') !== 'true' || !localStorage.getItem('currentUser')) {
         window.location.href = "login.html";
         return;
